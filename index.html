@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Horarios UCC</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f2f4f7;
+}
+
+header {
+    background: linear-gradient(90deg, #3b82f6, #6366f1);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2563eb;
+}
+
+.lista {
+    font-size: 14px;
+    margin-top: 10px;
+    color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>📅 Sistema de Horarios UCC</h1>
+    <p>Gestiona docentes, aulas y clases fácilmente</p>
+</header>
+
+<div class="container">
+
+<!-- DOCENTE -->
+<div class="card">
+    <h2>Registrar docente</h2>
+    <input id="docenteNombre" placeholder="Nombre">
+    <input id="docenteEsp" placeholder="Especialidad">
+    <button onclick="guardarDocente()">Guardar docente</button>
+    <div id="listaDocentes" class="lista"></div>
+</div>
+
+<!-- AULA -->
+<div class="card">
+    <h2>Registrar aula</h2>
+    <select id="tipoAula">
+        <option>Aula</option>
+        <option>Laboratorio</option>
+        <option>Taller</option>
+    </select>
+    <button onclick="guardarAula()">Guardar aula</button>
+    <div id="listaAulas" class="lista"></div>
+</div>
+
+<!-- CLASE -->
+<div class="card">
+    <h2>Registrar clase</h2>
+    <input id="claseNombre" placeholder="Nombre">
+    <input id="claseCreditos" type="number" placeholder="Créditos">
+    <button onclick="guardarClase()">Guardar clase</button>
+    <div id="listaClases" class="lista"></div>
+</div>
+
+</div>
+
+<script>
+let docentes = JSON.parse(localStorage.getItem("docentes")) || [];
+let aulas = JSON.parse(localStorage.getItem("aulas")) || [];
+let clases = JSON.parse(localStorage.getItem("clases")) || [];
+
+function guardarDocente() {
+    let nombre = document.getElementById("docenteNombre").value;
+    let esp = document.getElementById("docenteEsp").value;
+
+    docentes.push({nombre, esp});
+    localStorage.setItem("docentes", JSON.stringify(docentes));
+    mostrar();
+}
+
+function guardarAula() {
+    let tipo = document.getElementById("tipoAula").value;
+
+    aulas.push({tipo});
+    localStorage.setItem("aulas", JSON.stringify(aulas));
+    mostrar();
+}
+
+function guardarClase() {
+    let nombre = document.getElementById("claseNombre").value;
+    let creditos = document.getElementById("claseCreditos").value;
+
+    clases.push({nombre, creditos});
+    localStorage.setItem("clases", JSON.stringify(clases));
+    mostrar();
+}
+
+function mostrar() {
+    document.getElementById("listaDocentes").innerHTML =
+        docentes.map(d => d.nombre + " - " + d.esp).join("<br>");
+
+    document.getElementById("listaAulas").innerHTML =
+        aulas.map(a => a.tipo).join("<br>");
+
+    document.getElementById("listaClases").innerHTML =
+        clases.map(c => c.nombre + " (" + c.creditos + ")").join("<br>");
+}
+
+mostrar();
+</script>
+
+</body>
+</html>
